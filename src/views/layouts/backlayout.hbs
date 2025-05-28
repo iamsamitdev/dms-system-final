@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - DMS Admin</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <meta name="description" content="{{description}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        {{> sidebar}}
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            {{> header}}
+            
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                {{{body}}}
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar')
+            sidebar.classList.toggle('-translate-x-full')
+        }
+        
+        // User dropdown toggle
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown')
+            dropdown.classList.toggle('hidden')
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('user-dropdown')
+            const userButton = document.getElementById('user-button')
+            
+            if (!userButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden')
+            }
+        })
+        
+        // Active menu highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname
+            const menuItems = document.querySelectorAll('.sidebar-menu-item')
+            
+            menuItems.forEach(item => {
+                const link = item.querySelector('a')
+                if (link && link.getAttribute('href') === currentPath) {
+                    item.classList.add('bg-blue-600', 'text-white', 'rounded-lg')
+                    item.classList.remove('text-gray-300', 'hover:bg-gray-700')
+                }
+            })
+        })
+    </script>
+</body>
+</html>

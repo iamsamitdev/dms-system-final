@@ -1,0 +1,296 @@
+<!-- Dashboard Header -->
+<div class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p class="mt-2 text-gray-600">Welcome back! Here's what's happening with your documents today.</p>
+        </div>
+        <div class="mt-4 sm:mt-0">
+            <button class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition duration-200 transform hover:scale-105 shadow-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Upload Document
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Documents -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Total Documents</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">1,234</p>
+                <p class="text-sm text-green-600 mt-1">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    +12% from last month
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Users -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Active Users</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">89</p>
+                <p class="text-sm text-green-600 mt-1">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    +5% from last month
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-users text-green-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Used -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Storage Used</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">67%</p>
+                <p class="text-sm text-yellow-600 mt-1">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    67GB of 100GB
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-hdd text-yellow-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Downloads Today -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Downloads Today</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">156</p>
+                <p class="text-sm text-blue-600 mt-1">
+                    <i class="fas fa-download mr-1"></i>
+                    +23% from yesterday
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-download text-purple-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts and Tables Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Document Activity Chart -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-gray-900">Document Activity</h3>
+            <select class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option>Last 7 days</option>
+                <option>Last 30 days</option>
+                <option>Last 3 months</option>
+            </select>
+        </div>
+        <div class="h-64 flex items-end justify-between space-x-2">
+            <!-- Simple Bar Chart -->
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 60%"></div>
+                <span class="text-xs text-gray-500">Mon</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 80%"></div>
+                <span class="text-xs text-gray-500">Tue</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 45%"></div>
+                <span class="text-xs text-gray-500">Wed</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 90%"></div>
+                <span class="text-xs text-gray-500">Thu</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 70%"></div>
+                <span class="text-xs text-gray-500">Fri</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 35%"></div>
+                <span class="text-xs text-gray-500">Sat</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="w-8 bg-blue-500 rounded-t" style="height: 25%"></div>
+                <span class="text-xs text-gray-500">Sun</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Usage -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">Storage Usage by Type</h3>
+        <div class="space-y-4">
+            <!-- PDF Files -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">PDF Files</span>
+                    <span class="text-sm text-gray-500">45%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-red-500 h-2 rounded-full" style="width: 45%"></div>
+                </div>
+            </div>
+            
+            <!-- Images -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Images</span>
+                    <span class="text-sm text-gray-500">30%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: 30%"></div>
+                </div>
+            </div>
+            
+            <!-- Documents -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Documents</span>
+                    <span class="text-sm text-gray-500">15%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full" style="width: 15%"></div>
+                </div>
+            </div>
+            
+            <!-- Videos -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Videos</span>
+                    <span class="text-sm text-gray-500">10%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-purple-500 h-2 rounded-full" style="width: 10%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity and Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Recent Documents -->
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
+        <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Recent Documents</h3>
+                <a href="/backend/documents" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View All</a>
+            </div>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                <!-- Document Item -->
+                <div class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition duration-200">
+                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-pdf text-red-600"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium text-gray-900">Annual Report 2024.pdf</h4>
+                        <p class="text-xs text-gray-500">Uploaded by John Doe • 2 hours ago</p>
+                    </div>
+                    <div class="text-xs text-gray-400">2.4 MB</div>
+                </div>
+                
+                <!-- Document Item -->
+                <div class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition duration-200">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-word text-blue-600"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium text-gray-900">Project Proposal.docx</h4>
+                        <p class="text-xs text-gray-500">Uploaded by Jane Smith • 4 hours ago</p>
+                    </div>
+                    <div class="text-xs text-gray-400">1.8 MB</div>
+                </div>
+                
+                <!-- Document Item -->
+                <div class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition duration-200">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-excel text-green-600"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium text-gray-900">Budget Analysis.xlsx</h4>
+                        <p class="text-xs text-gray-500">Uploaded by Mike Johnson • 6 hours ago</p>
+                    </div>
+                    <div class="text-xs text-gray-400">3.2 MB</div>
+                </div>
+                
+                <!-- Document Item -->
+                <div class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition duration-200">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-image text-purple-600"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium text-gray-900">Company Logo.png</h4>
+                        <p class="text-xs text-gray-500">Uploaded by Sarah Wilson • 1 day ago</p>
+                    </div>
+                    <div class="text-xs text-gray-400">512 KB</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+        <div class="p-6 border-b border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-3">
+                <button class="w-full flex items-center space-x-3 p-3 text-left hover:bg-blue-50 rounded-lg transition duration-200 group">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200">
+                        <i class="fas fa-upload text-blue-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">Upload Document</p>
+                        <p class="text-xs text-gray-500">Add new files to system</p>
+                    </div>
+                </button>
+                
+                <button class="w-full flex items-center space-x-3 p-3 text-left hover:bg-green-50 rounded-lg transition duration-200 group">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200">
+                        <i class="fas fa-user-plus text-green-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">Add User</p>
+                        <p class="text-xs text-gray-500">Invite new team member</p>
+                    </div>
+                </button>
+                
+                <button class="w-full flex items-center space-x-3 p-3 text-left hover:bg-purple-50 rounded-lg transition duration-200 group">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200">
+                        <i class="fas fa-chart-line text-purple-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">Generate Report</p>
+                        <p class="text-xs text-gray-500">Create usage analytics</p>
+                    </div>
+                </button>
+                
+                <button class="w-full flex items-center space-x-3 p-3 text-left hover:bg-orange-50 rounded-lg transition duration-200 group">
+                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200">
+                        <i class="fas fa-cog text-orange-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">System Settings</p>
+                        <p class="text-xs text-gray-500">Configure preferences</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
