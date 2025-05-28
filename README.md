@@ -180,16 +180,39 @@ npm run start:debug    # รัน debug mode
 npm run build:prod     # Build สำหรับ production
 npm run start:prod     # รัน production server
 
+# Database
+npm run test:db        # ทดสอบการเชื่อมต่อฐานข้อมูล
+npm run db:sync        # สร้างตารางในฐานข้อมูล (sync schema)
+npm run db:seed        # เพิ่มข้อมูลเริ่มต้น (roles และ admin user)
+
 # Testing
 npm run test           # รัน unit tests
 npm run test:e2e       # รัน e2e tests
 npm run test:cov       # รัน test coverage
-npm run test:db        # ทดสอบการเชื่อมต่อฐานข้อมูล
 
 # Code Quality
 npm run lint           # รัน ESLint
 npm run format         # รัน Prettier
 ```
+
+### 🗄️ การตั้งค่าฐานข้อมูล
+
+```bash
+# 1. ทดสอบการเชื่อมต่อฐานข้อมูล
+npm run test:db
+
+# 2. สร้างตารางในฐานข้อมูล
+npm run db:sync
+
+# 3. เพิ่มข้อมูลเริ่มต้น (roles และ admin user)
+npm run db:seed
+```
+
+**ข้อมูล Admin User ที่สร้างโดย Seed:**
+- Username: `admin`
+- Password: `admin123`
+- Email: `admin@example.com`
+- Role: Administrator
 
 ## 🌐 Routes และ Endpoints
 
