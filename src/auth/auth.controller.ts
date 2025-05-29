@@ -1,8 +1,16 @@
 import { Controller, Get, Post, Render, Body, Res } from "@nestjs/common";
-import { Response } from "express";
+import { Response } from "express"
+import { AuthService } from "./auth.service"
+import { UserService } from "../users/user.service"
+import * as bcrypt from "bcrypt"
 
 @Controller("auth")
 export class AuthController {
+
+    constructor(
+        private authService: AuthService,
+        private usersService: UserService
+    ) {}
 
     // Login endpoint
     @Get("login")
@@ -13,8 +21,21 @@ export class AuthController {
 
     // Login POST endpoint
     @Post("login")
-    async postLogin(@Body() body: { email: string, password: string }, @Res() res: Response) {
-        return res.redirect("/backend/dashboard");
+    async postLogin(
+        @Body() body: { username: string, password: string }, @Res() res: Response) {
+        
+        const user = await this.authService.validateUser(body.username, body.password)
+
+        if(user) {
+            // ถ้าผู้ใช้ล็อกอินสำเร็จ ให้ redirect ไปที่ dashboard
+            return res.redirect("/backend/dashboard");
+        } else {
+            // ถ้าผู้ใช้ล็อกอินไม่สำเร็จ ให้แสดง error message
+            return res.render("auth/login", {
+                title: "Login",
+                error: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"
+            });
+        }
     }
 
     // Register endpoint
@@ -29,8 +50,23 @@ export class AuthController {
 
     // Register POST endpoint
     @Post("register")
-    async postRegister(@Body() body: { email: string, password: string }, @Res() res: Response) {
-        return res.redirect("/backend/dashboard");
+    async postRegister(
+        @Body() body: { 
+            firstName: string,
+            lastName: string,
+            username: string,
+            email: string, 
+            password: string 
+        }, 
+        @Res() res: Response) {
+        try {
+
+        } catch (error) {
+            return res.render("auth/register", {
+                title: "Register",
+                error: `เกิดข้อผิดพลาด: ${error.message}`
+            })
+        }
     }
 
     // Forgot Password GET endpoint
