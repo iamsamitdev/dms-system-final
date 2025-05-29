@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Render, Body, Res } from "@nestjs/common";
-import { Response } from "express"
+import { Controller, Get, Post, Render, Body, Res, Req } from "@nestjs/common";
+import { Response, Request } from "express"
 import { AuthService } from "./auth.service"
 import { UserService } from "../users/user.service"
-import * as bcrypt from "bcrypt"
 
 @Controller("auth")
 export class AuthController {
@@ -22,15 +21,38 @@ export class AuthController {
     // Login POST endpoint
     @Post("login")
     async postLogin(
-        @Body() body: { username: string, password: string }, @Res() res: Response) {
-        
-        const user = await this.authService.validateUser(body.username, body.password)
+        @Body() body: { username: string, password: string }, 
+        @Req() req: Request, 
+        @Res() res: Response
+    ) {
+        const user = await this.authService.validateUser(body.username, body.password);
 
-        if(user) {
-            // ถ้าผู้ใช้ล็อกอินสำเร็จ ให้ redirect ไปที่ dashboard
+        if (user) {
+            // บันทึกข้อมูลผู้ใช้ใน session
+            req.session.user = {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                email: user.email,
+                roleId: user.roleId
+            };
+
+            // บันทึก session
+            req.session.save((err) => {
+                if (err) {
+                    console.error("Session save error:", err);
+                    return res.render("auth/login", {
+                        title: "Login",
+                        error: "เกิดข้อผิดพลาดในการบันทึก session กรุณาลองใหม่อีกครั้ง"
+                    });
+                }
+            })
+
+            // Redirect ไปที่ dashboard
             return res.redirect("/backend/dashboard");
         } else {
-            // ถ้าผู้ใช้ล็อกอินไม่สำเร็จ ให้แสดง error message
+            // แสดง error message ถ้าล็อกอินไม่สำเร็จ
             return res.render("auth/login", {
                 title: "Login",
                 error: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"
@@ -93,7 +115,7 @@ export class AuthController {
                 lastName: body.lastName,
                 username: body.username,
                 email: body.email,
-                password: await bcrypt.hash(body.password, 10),
+                password: body.password,
                 roleId: 3 // สมมุติว่า roleId 3 คือผู้ใช้ทั่วไป
             })
 
