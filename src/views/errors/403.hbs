@@ -1,0 +1,34 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md p-8 text-center bg-white shadow-lg rounded-xl">
+        <!-- Error Icon -->
+        <div class="flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-red-100 rounded-full">
+            <i class="text-3xl text-red-600 fas fa-ban"></i>
+        </div>
+        
+        <!-- Error Title -->
+        <h1 class="mb-4 text-3xl font-bold text-gray-900">403</h1>
+        <h2 class="mb-4 text-xl font-semibold text-gray-700">ไม่มีสิทธิ์เข้าถึง</h2>
+        
+        <!-- Error Message -->
+        <p class="mb-8 text-gray-600">{{message}}</p>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+            <a href="/backend/dashboard" class="inline-block w-full px-4 py-3 font-medium text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
+                <i class="mr-2 fas fa-home"></i>
+                กลับสู่หน้าหลัก
+            </a>
+            <button onclick="history.back()" class="w-full px-4 py-3 font-medium text-gray-700 transition duration-200 bg-gray-100 rounded-lg hover:bg-gray-200">
+                <i class="mr-2 fas fa-arrow-left"></i>
+                กลับหน้าก่อนหน้า
+            </button>
+        </div>
+        
+        <!-- Additional Info -->
+        <div class="pt-6 mt-8 border-t border-gray-200">
+            <p class="text-sm text-gray-500">
+                หากคุณคิดว่านี่เป็นข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ
+            </p>
+        </div>
+    </div>
+</div> 

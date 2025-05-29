@@ -17,6 +17,7 @@ export class CategoryController {
             title: 'Categories',
             description: 'Manage document categories',
             layout: 'layouts/backlayout',
+            currentPath: req.path,
             user,
             categories
         }
@@ -26,6 +27,33 @@ export class CategoryController {
     @Get('api')
     async getCategoriesApi() {
         return this.categoryService.findAll()
+    }
+
+    // API: ดึงหมวดหมู่ที่ใช้งานเท่านั้น (สำหรับ dropdown)
+    @Get('api/active')
+    async getActiveCategoriesApi() {
+        return this.categoryService.findActive()
+    }
+
+    // API: ดึงหมวดหมู่ตาม ID
+    @Get('api/:id')
+    async getCategoryById(@Param('id') id: string, @Res() res: Response) {
+        try {
+            const category = await this.categoryService.findById(id)
+            if (!category) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'ไม่พบหมวดหมู่ที่ต้องการ'
+                })
+            }
+
+            return res.json(category)
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: 'เกิดข้อผิดพลาดในการดึงข้อมูลหมวดหมู่'
+            })
+        }
     }
 
     // API: สร้างหมวดหมู่ใหม่
@@ -62,11 +90,11 @@ export class CategoryController {
     @Put('api/:id')
     async updateCategory(
         @Param('id') id: string,
-        @Body() body: { name?: string, description?: string },
+        @Body() body: { name?: string, description?: string, isActive?: boolean },
         @Res() res: Response
     ) {
         try {
-            // ตรวจสอบชื่อซ้ำ (ยกเว้น ID ปัจจุบัน)
+            // ตรวจสอบชื่อซ้ำ (ยกเว้น ID ปัจจุบัน) เฉพาะเมื่อมีการส่ง name มา
             if (body.name) {
                 const nameExists = await this.categoryService.isNameExists(body.name, id)
                 if (nameExists) {

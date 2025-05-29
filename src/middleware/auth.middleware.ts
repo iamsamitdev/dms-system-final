@@ -38,22 +38,28 @@ export class AuthMiddleware implements NestMiddleware {
             return next()
         }
         
-        // ตรวจสอบสิทธิ์การเข้าถึงตาม role
-        const userRoleId = req.session.user.roleId
-        
-        // กำหนดสิทธิ์การเข้าถึงตาม role
-        const rolePermissions = {
-            1: ['documents', 'users', 'reports', 'settings', 'profile'], // Administrator
-            2: ['documents', 'reports', 'profile'], // Manager  
-            3: ['documents', 'profile'] // User
-        }
-        
-        // ตรวจสอบว่า role นี้มีสิทธิ์เข้าถึง route นี้หรือไม่
-        const allowedRoutes = rolePermissions[userRoleId] || []
-        
-        if (!allowedRoutes.includes(routeName)) {
-            console.log('Access denied for:', routeName, 'Role:', userRoleId)
-            return res.redirect('/backend/dashboard?error=access_denied')
+        // ตรวจสอบสิทธิ์การเข้าถึงหน้าต่างๆ (ยกเว้น dashboard)
+        if (req.path !== '/backend' && req.path !== '/backend/') {
+          const userRoleId = req.session.user.roleId
+          
+          // กำหนดสิทธิ์การเข้าถึงแต่ละหน้า
+          const rolePermissions = {
+            '/backend/users': [1], // เฉพาะ Administrator
+            '/backend/categories': [1], // เฉพาะ Administrator  
+            '/backend/reports': [1, 2], // Administrator และ Manager
+            '/backend/settings': [1], // เฉพาะ Administrator
+          }
+          
+          // ตรวจสอบว่าหน้าปัจจุบันต้องการสิทธิ์พิเศษหรือไม่
+          const requiredRoles = rolePermissions[req.path]
+          if (requiredRoles && !requiredRoles.includes(userRoleId)) {
+            return res.status(403).render('errors/403', {
+              title: 'Access Denied',
+              message: 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้',
+              layout: 'layouts/backlayout',
+              user: req.session.user
+            })
+          }
         }
         
         // ถ้าผ่านการตรวจสอบทั้งหมด

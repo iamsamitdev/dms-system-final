@@ -3,6 +3,16 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 import { Document, DocumentStatus } from "./document.entity"
 
+export interface PaginationResult {
+    documents: Document[]
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+    hasNext: boolean
+    hasPrev: boolean
+}
+
 @Injectable()
 export class DocumentService {
     constructor(
@@ -10,13 +20,94 @@ export class DocumentService {
         private documentRepository: Repository<Document>
     ) {}
 
-    // ดึงเอกสารทั้งหมด
+    // ดึงเอกสารพร้อม pagination
+    async findWithPagination(page: number = 1, limit: number = 5): Promise<PaginationResult> {
+        try {
+            console.log(`DocumentService: findWithPagination - page: ${page}, limit: ${limit}`)
+            
+            const skip = (page - 1) * limit
+            
+            const [documents, total] = await this.documentRepository.findAndCount({
+                where: { isActive: true },
+                relations: {
+                    owner: {
+                        role: true
+                    },
+                    category: true
+                },
+                order: { createdAt: 'DESC' },
+                skip,
+                take: limit
+            })
+            
+            const totalPages = Math.ceil(total / limit)
+            
+            console.log(`DocumentService: Found ${documents.length} documents, total: ${total}, totalPages: ${totalPages}`)
+            
+            return {
+                documents,
+                total,
+                page,
+                limit,
+                totalPages,
+                hasNext: page < totalPages,
+                hasPrev: page > 1
+            }
+        } catch (error) {
+            console.error('DocumentService: Error in findWithPagination:', error)
+            throw error
+        }
+    }
+
+    // ดึงเอกสารทั้งหมด (เก็บไว้สำหรับ backward compatibility)
     async findAll(): Promise<Document[]> {
-        return this.documentRepository.find({
-            where: { isActive: true },
-            relations: ['owner', 'category'],
-            order: { createdAt: 'DESC' }
-        })
+        try {
+            console.log('DocumentService: Starting findAll query...')
+            
+            // ตรวจสอบข้อมูลทั้งหมดก่อน (รวม inactive)
+            const allDocuments = await this.documentRepository.find({
+                order: { createdAt: 'DESC' }
+            })
+            console.log('DocumentService: Total documents in DB:', allDocuments.length)
+            
+            // ตรวจสอบเฉพาะ active documents
+            const activeDocuments = await this.documentRepository.find({
+                where: { isActive: true },
+                order: { createdAt: 'DESC' }
+            })
+            console.log('DocumentService: Active documents:', activeDocuments.length)
+            
+            // ดึงข้อมูลพร้อม relations
+            const documents = await this.documentRepository.find({
+                where: { isActive: true },
+                relations: {
+                    owner: {
+                        role: true
+                    },
+                    category: true
+                },
+                order: { createdAt: 'DESC' }
+            })
+            
+            console.log('DocumentService: Documents with relations:', documents.length)
+            
+            if (documents.length > 0) {
+                console.log('DocumentService: Sample document:', {
+                    id: documents[0].id,
+                    title: documents[0].title,
+                    ownerId: documents[0].ownerId,
+                    categoryId: documents[0].categoryId,
+                    hasOwner: !!documents[0].owner,
+                    hasCategory: !!documents[0].category,
+                    ownerName: documents[0].owner ? `${documents[0].owner.firstName} ${documents[0].owner.lastName}` : 'No owner'
+                })
+            }
+            
+            return documents
+        } catch (error) {
+            console.error('DocumentService: Error in findAll:', error)
+            throw error
+        }
     }
 
     // ดึงเอกสารตาม ID
@@ -38,6 +129,7 @@ export class DocumentService {
         path: string
         ownerId: string
         categoryId?: string
+        status?: DocumentStatus
     }): Promise<Document> {
         const document = this.documentRepository.create(documentData)
         return this.documentRepository.save(document)

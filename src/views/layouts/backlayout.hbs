@@ -123,13 +123,15 @@
         // Active menu highlighting
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname
-            const menuItems = document.querySelectorAll('.sidebar-menu-item')
+            const menuLinks = document.querySelectorAll('nav ul li a')
             
-            menuItems.forEach(item => {
-                const link = item.querySelector('a')
-                if (link && link.getAttribute('href') === currentPath) {
-                    item.classList.add('bg-blue-600', 'text-white', 'rounded-lg')
-                    item.classList.remove('text-gray-300', 'hover:bg-gray-700')
+            menuLinks.forEach(link => {
+                const href = link.getAttribute('href')
+                if (href === currentPath) {
+                    // Remove default classes
+                    link.classList.remove('text-gray-300', 'hover:bg-gray-700', 'hover:text-white')
+                    // Add active classes
+                    link.classList.add('bg-blue-600', 'text-white')
                 }
             })
         })

@@ -20,51 +20,63 @@
 
     <!-- Navigation Menu -->
     <nav class="space-y-2">
-        <!-- Dashboard - ทุก role เข้าถึงได้ -->
-        <div class="sidebar-menu-item">
-            <a href="/backend/dashboard" class="flex items-center px-3 py-2 space-x-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white">
-                <i class="w-5 fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-        </div>
+        <ul class="space-y-1">
+            <!-- Dashboard - ทุก role เข้าถึงได้ -->
+            <li>
+                <a href="/backend/dashboard" class="flex items-center px-4 py-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="mr-3 text-lg fas fa-tachometer-alt"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+            </li>
 
-        <!-- Documents - ทุก role เข้าถึงได้ -->
-        <div class="sidebar-menu-item">
-            <a href="/backend/documents" class="flex items-center px-3 py-2 space-x-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white">
-                <i class="w-5 fas fa-folder"></i>
-                <span>Documents</span>
-            </a>
-        </div>
+            <!-- Documents - ทุก role เข้าถึงได้ -->
+            <li>
+                <a href="/backend/documents" class="flex items-center px-4 py-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="mr-3 text-lg fas fa-file-alt"></i>
+                    <span class="font-medium">Documents</span>
+                </a>
+            </li>
 
-        <!-- Users - เฉพาะ Administrator -->
-        {{#if (eq user.roleId 1)}}
-        <div class="sidebar-menu-item">
-            <a href="/backend/users" class="flex items-center px-3 py-2 space-x-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white">
-                <i class="w-5 fas fa-users"></i>
-                <span>Users</span>
-            </a>
-        </div>
-        {{/if}}
+            <!-- Categories (Admin only) -->
+            {{#if (eq user.roleId 1)}}
+            <li>
+                <a href="/backend/categories" class="flex items-center px-4 py-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="mr-3 text-lg fas fa-tags"></i>
+                    <span class="font-medium">Categories</span>
+                </a>
+            </li>
+            {{/if}}
 
-        <!-- Reports - Manager และ Administrator -->
-        {{#if (or (eq user.roleId 1) (eq user.roleId 2))}}
-        <div class="sidebar-menu-item">
-            <a href="/backend/reports" class="flex items-center px-3 py-2 space-x-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white">
-                <i class="w-5 fas fa-chart-bar"></i>
-                <span>Reports</span>
-            </a>
-        </div>
-        {{/if}}
+            <!-- Users (Admin only) -->
+            {{#if (eq user.roleId 1)}}
+            <li>
+                <a href="/backend/users" class="flex items-center px-4 py-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="mr-3 text-lg fas fa-users"></i>
+                    <span class="font-medium">Users</span>
+                </a>
+            </li>
+            {{/if}}
 
-        <!-- Settings - เฉพาะ Administrator -->
-        {{#if (eq user.roleId 1)}}
-        <div class="sidebar-menu-item">
-            <a href="/backend/settings" class="flex items-center px-3 py-2 space-x-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white">
-                <i class="w-5 fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
-        </div>
-        {{/if}}
+            <!-- Reports - Manager และ Administrator -->
+            {{#if (or (eq user.roleId 1) (eq user.roleId 2))}}
+            <li>
+                <a href="/backend/reports" class="flex items-center px-4 py-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="mr-3 text-lg fas fa-chart-bar"></i>
+                    <span class="font-medium">Reports</span>
+                </a>
+            </li>
+            {{/if}}
+
+            <!-- Settings - เฉพาะ Administrator -->
+            {{#if (eq user.roleId 1)}}
+            <li>
+                <a href="/backend/settings" class="flex items-center px-4 py-3 text-gray-300 transition duration-200 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="mr-3 text-lg fas fa-cog"></i>
+                    <span class="font-medium">Settings</span>
+                </a>
+            </li>
+            {{/if}}
+        </ul>
     </nav>
 
     <!-- Divider -->

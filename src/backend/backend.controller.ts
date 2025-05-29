@@ -1,11 +1,17 @@
 import { Controller, Get, Render, Req } from '@nestjs/common'
 import { Request } from 'express'
 import { UserService } from '../users/user.service'
+import { DocumentService } from '../documents/document.service'
+import { CategoryService } from '../categories/category.service'
 
 @Controller('backend')
 export class BackendController {
   
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private documentService: DocumentService,
+    private categoryService: CategoryService
+  ) {}
   
   @Get('dashboard')
   @Render('back/dashboard')
@@ -16,25 +22,43 @@ export class BackendController {
     const errorMessage = req.query.error === 'access_denied' 
       ? 'คุณไม่มีสิทธิ์เข้าถึงหน้าที่ต้องการ' 
       : null
-    
-    return {
-      title: 'Dashboard',
-      description: 'DMS System Admin Dashboard - Monitor and manage your document management system',
-      layout: 'layouts/backlayout',
-      user,
-      error: errorMessage
-    }
-  }
 
-  @Get('documents')
-  @Render('back/documents')
-  async getDocuments(@Req() req: Request) {
-    const user = await this.getUserWithRole(req)
-    return {
-      title: 'Documents',
-      description: 'Manage all documents in the system',
-      layout: 'layouts/backlayout',
-      user
+    try {
+      // คำนวณสถิติต่างๆ
+      const stats = await this.calculateDashboardStats()
+      
+      return {
+        title: 'Dashboard',
+        description: 'DMS System Admin Dashboard - Monitor and manage your document management system',
+        layout: 'layouts/backlayout',
+        currentPath: req.path,
+        user,
+        error: errorMessage,
+        stats
+      }
+    } catch (error) {
+      console.error('Error calculating dashboard stats:', error)
+      
+      // ส่งค่า default ในกรณีเกิดข้อผิดพลาด
+      return {
+        title: 'Dashboard',
+        description: 'DMS System Admin Dashboard - Monitor and manage your document management system',
+        layout: 'layouts/backlayout',
+        currentPath: req.path,
+        user,
+        error: errorMessage,
+        stats: {
+          totalDocuments: 0,
+          activeUsers: 0,
+          totalCategories: 0,
+          storageUsed: {
+            percentage: 0,
+            used: '0 MB',
+            total: '100 GB'
+          },
+          recentDocuments: []
+        }
+      }
     }
   }
 
@@ -46,6 +70,7 @@ export class BackendController {
       title: 'Users',
       description: 'Manage system users and permissions',
       layout: 'layouts/backlayout',
+      currentPath: req.path,
       user
     }
   }
@@ -58,6 +83,7 @@ export class BackendController {
       title: 'Reports',
       description: 'View system analytics and reports',
       layout: 'layouts/backlayout',
+      currentPath: req.path,
       user
     }
   }
@@ -70,6 +96,7 @@ export class BackendController {
       title: 'Settings',
       description: 'Configure system settings and preferences',
       layout: 'layouts/backlayout',
+      currentPath: req.path,
       user
     }
   }
@@ -82,6 +109,7 @@ export class BackendController {
       title: 'Profile',
       description: 'Manage your profile settings',
       layout: 'layouts/backlayout',
+      currentPath: req.path,
       user
     }
   }
@@ -92,5 +120,56 @@ export class BackendController {
       return user
     }
     return req.session?.user
+  }
+
+  // คำนวณสถิติสำหรับ Dashboard
+  private async calculateDashboardStats() {
+    try {
+      // ดึงข้อมูลเอกสารทั้งหมด
+      const allDocuments = await this.documentService.findAll()
+      
+      // ดึงข้อมูลผู้ใช้ที่ active
+      const allUsers = await this.userService.findAll()
+      const activeUsers = allUsers.filter(user => user.isActive)
+      
+      // ดึงข้อมูลหมวดหมู่ที่ active
+      const activeCategories = await this.categoryService.findActive()
+      
+      // คำนวณขนาดไฟล์ทั้งหมด
+      const totalSize = allDocuments.reduce((sum, doc) => sum + (doc.size || 0), 0)
+      const totalSizeGB = totalSize / (1024 * 1024 * 1024) // แปลงเป็น GB
+      const maxStorageGB = 100 // กำหนดพื้นที่สูงสุด 100GB
+      const storagePercentage = Math.min((totalSizeGB / maxStorageGB) * 100, 100)
+      
+      // เอกสารล่าสุด 5 รายการ
+      const recentDocuments = allDocuments
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 5)
+      
+      return {
+        totalDocuments: allDocuments.length,
+        activeUsers: activeUsers.length,
+        totalCategories: activeCategories.length,
+        storageUsed: {
+          percentage: Math.round(storagePercentage),
+          used: this.formatFileSize(totalSize),
+          total: `${maxStorageGB} GB`,
+          usedGB: totalSizeGB.toFixed(1)
+        },
+        recentDocuments
+      }
+    } catch (error) {
+      console.error('Error in calculateDashboardStats:', error)
+      throw error
+    }
+  }
+
+  // Helper function สำหรับจัดรูปแบบขนาดไฟล์
+  private formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 } 

@@ -10,8 +10,15 @@ export class CategoryService {
         private categoryRepository: Repository<Category>
     ) {}
 
-    // ดึงหมวดหมู่ทั้งหมด
+    // ดึงหมวดหมู่ทั้งหมด (รวม inactive สำหรับ admin)
     async findAll(): Promise<Category[]> {
+        return this.categoryRepository.find({
+            order: { name: 'ASC' }
+        })
+    }
+
+    // ดึงหมวดหมู่ที่ใช้งานเท่านั้น (สำหรับ dropdown)
+    async findActive(): Promise<Category[]> {
         return this.categoryRepository.find({
             where: { isActive: true },
             order: { name: 'ASC' }
@@ -21,7 +28,7 @@ export class CategoryService {
     // ดึงหมวดหมู่ตาม ID
     async findById(id: string): Promise<Category | null> {
         return this.categoryRepository.findOne({
-            where: { id, isActive: true }
+            where: { id }
         })
     }
 
@@ -38,6 +45,7 @@ export class CategoryService {
     async update(id: string, categoryData: {
         name?: string
         description?: string
+        isActive?: boolean
     }): Promise<Category | null> {
         await this.categoryRepository.update(id, categoryData)
         return this.findById(id)
