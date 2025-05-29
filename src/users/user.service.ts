@@ -26,7 +26,6 @@ export class UserService {
             relations: ['role'] 
         })
     }
-
     // ฟังก์ชันค้นหาผู้ใช้ตาม ID
     async findById(id: number): Promise<User | null> {
         return this.userRepository.findOne({ 
