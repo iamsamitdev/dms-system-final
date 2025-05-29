@@ -4,6 +4,9 @@ import { AppModule } from './app.module'
 import * as hbs from 'hbs'
 import { join } from 'path'
 import * as session from 'express-session'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -11,7 +14,7 @@ async function bootstrap() {
   // ตั้งค่า session middleware
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'dms-secret-key',
+      secret: process.env.SESSION_SECRET as string,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -34,6 +37,17 @@ async function bootstrap() {
   // ลงทะเบียน partials (ถ้ามี)
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'))
 
-  await app.listen(process.env.PORT ?? 3000);
+  // ลงทะเบียน Handlebars helpers
+  hbs.registerHelper('substring', function(str: string, start: number, length: number) {
+    if (!str) return ''
+    return str.substring(start, start + length).toUpperCase()
+  })
+
+  hbs.registerHelper('uppercase', function(str: string) {
+    if (!str) return ''
+    return str.toUpperCase()
+  })
+
+  await app.listen(process.env.PORT ?? 3000)
 }
 bootstrap();

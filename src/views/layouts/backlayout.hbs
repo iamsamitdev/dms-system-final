@@ -39,6 +39,11 @@
             dropdown.classList.toggle('hidden')
         }
         
+        // Confirm logout
+        function confirmLogout() {
+            return confirm('คุณต้องการออกจากระบบหรือไม่?')
+        }
+        
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('user-dropdown')

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -8,6 +8,7 @@ import { RoleModule } from './roles/role.module';
 import { AuthModule } from './auth/auth.module';
 import { BackendModule } from './backend/backend.module';
 import { AppDataSource } from './database/data-source';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -24,4 +25,10 @@ import { AppDataSource } from './database/data-source';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes('backend/*'); // ป้องกันเฉพาะ routes ที่ขึ้นต้นด้วย /backend
+  }
+}

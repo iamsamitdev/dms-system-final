@@ -7,6 +7,7 @@
     <link href="/css/style.css" rel="stylesheet">
     <meta name="description" content="{{description}}">
     <meta name="keywords" content="document management, file storage, collaboration, DMS">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="min-h-screen bg-gray-50">
     <!-- Navigation -->
@@ -27,6 +28,22 @@
             const mobileMenu = document.getElementById('mobile-menu')
             mobileMenu.classList.toggle('hidden')
         }
+        
+        // Navbar user dropdown toggle
+        function toggleNavbarUserDropdown() {
+            const dropdown = document.getElementById('navbar-user-dropdown')
+            dropdown.classList.toggle('hidden')
+        }
+        
+        // Close navbar dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('navbar-user-dropdown')
+            const userButton = document.getElementById('navbar-user-button')
+            
+            if (dropdown && userButton && !userButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden')
+            }
+        })
         
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

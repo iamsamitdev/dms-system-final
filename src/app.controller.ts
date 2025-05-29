@@ -1,4 +1,5 @@
-import { Controller, Get, Render } from '@nestjs/common'
+import { Controller, Get, Render, Req } from '@nestjs/common'
+import { Request } from 'express'
 import { AppService } from './app.service'
 
 @Controller()
@@ -8,11 +9,12 @@ export class AppController {
   // Home page with layout
   @Get()
   @Render('front/index')
-  getHome() {
+  getHome(@Req() req: Request) {
     return {
       title: 'Home',
       description: 'Professional Document Management System for modern businesses. Secure storage, real-time collaboration, and intelligent organization.',
-      layout: 'layouts/frontlayout'
+      layout: 'layouts/frontlayout',
+      user: req.session?.user
     }
   }
 

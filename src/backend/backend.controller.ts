@@ -1,65 +1,89 @@
-import { Controller, Get, Render } from '@nestjs/common'
+import { Controller, Get, Render, Req } from '@nestjs/common'
+import { Request } from 'express'
+import { UserService } from '../users/user.service'
 
 @Controller('backend')
 export class BackendController {
   
+  constructor(private userService: UserService) {}
+  
   @Get('dashboard')
   @Render('back/dashboard')
-  getDashboard() {
+  async getDashboard(@Req() req: Request) {
+    const user = await this.getUserWithRole(req)
     return {
       title: 'Dashboard',
       description: 'DMS System Admin Dashboard - Monitor and manage your document management system',
-      layout: 'layouts/backlayout'
+      layout: 'layouts/backlayout',
+      user
     }
   }
 
   @Get('documents')
   @Render('back/documents')
-  getDocuments() {
+  async getDocuments(@Req() req: Request) {
+    const user = await this.getUserWithRole(req)
     return {
       title: 'Documents',
       description: 'Manage all documents in the system',
-      layout: 'layouts/backlayout'
+      layout: 'layouts/backlayout',
+      user
     }
   }
 
   @Get('users')
   @Render('back/users')
-  getUsers() {
+  async getUsers(@Req() req: Request) {
+    const user = await this.getUserWithRole(req)
     return {
       title: 'Users',
       description: 'Manage system users and permissions',
-      layout: 'layouts/backlayout'
+      layout: 'layouts/backlayout',
+      user
     }
   }
 
   @Get('reports')
   @Render('back/reports')
-  getReports() {
+  async getReports(@Req() req: Request) {
+    const user = await this.getUserWithRole(req)
     return {
       title: 'Reports',
       description: 'View system analytics and reports',
-      layout: 'layouts/backlayout'
+      layout: 'layouts/backlayout',
+      user
     }
   }
 
   @Get('settings')
   @Render('back/settings')
-  getSettings() {
+  async getSettings(@Req() req: Request) {
+    const user = await this.getUserWithRole(req)
     return {
       title: 'Settings',
       description: 'Configure system settings and preferences',
-      layout: 'layouts/backlayout'
+      layout: 'layouts/backlayout',
+      user
     }
   }
 
   @Get('profile')
   @Render('back/profile')
-  getProfile() {
+  async getProfile(@Req() req: Request) {
+    const user = await this.getUserWithRole(req)
     return {
       title: 'Profile',
       description: 'Manage your profile settings',
-      layout: 'layouts/backlayout'
+      layout: 'layouts/backlayout',
+      user
     }
+  }
+
+  private async getUserWithRole(req: Request) {
+    if (req.session?.user?.id) {
+      const user = await this.userService.findById(req.session.user.id)
+      return user
+    }
+    return req.session?.user
   }
 } 

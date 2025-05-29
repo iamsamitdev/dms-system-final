@@ -60,6 +60,29 @@ export class AuthController {
         }
     }
 
+    // Logout endpoint
+    @Get("logout")
+    async logout(@Req() req: Request, @Res() res: Response) {
+        try {
+            // ทำลาย session
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error("Session destroy error:", err);
+                    return res.redirect("/backend/dashboard");
+                }
+                
+                // Clear cookie
+                res.clearCookie('connect.sid'); // ชื่อ cookie อาจแตกต่างกันตาม session config
+                
+                // Redirect ไปหน้า login พร้อม success message
+                return res.redirect("/auth/login?message=logout_success");
+            });
+        } catch (error) {
+            console.error("Logout error:", error);
+            return res.redirect("/backend/dashboard");
+        }
+    }
+
     // Register endpoint
     @Get("register")
     @Render("auth/register")
