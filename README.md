@@ -1,328 +1,393 @@
-# 📁 DMS System - Document Management System
+# 📁 DMS System (Document Management System)
 
-ระบบจัดการเอกสารที่สร้างด้วย NestJS, TypeScript, และ Tailwind CSS พร้อมระบบ Authentication และ Backend Dashboard ที่สมบูรณ์แบบ
+ระบบจัดการเอกสารที่สร้างด้วย NestJS, TypeORM, PostgreSQL และ Handlebars พร้อมระบบ Authentication และ Role-based Access Control
 
-## 🚀 คุณสมบัติหลัก
+## 🚀 Features
 
-### 🎨 Frontend Features
-- **หน้าแรก (Landing Page)**: Hero section, Features, Pricing, About, Contact พร้อม animations
-- **ระบบ Authentication**: Login, Register, Forgot Password พร้อม 2-column layout
-- **Responsive Design**: รองรับทุกขนาดหน้าจอ
-- **Modern UI**: ใช้ Tailwind CSS v4 พร้อม gradient และ animations
+### 🔐 Authentication & Authorization
+- **Login/Register System** - ระบบเข้าสู่ระบบและสมัครสมาชิก
+- **Role-based Access Control** - ควบคุมสิทธิ์ตาม Role (Administrator, Manager, User)
+- **Session Management** - จัดการ Session ด้วย Express Session
+- **Password Hashing** - เข้ารหัสรหัสผ่านด้วย bcrypt
 
-### 🔧 Backend Dashboard
-- **Dashboard**: Overview พร้อม stats cards, charts, และ recent activity
-- **Documents Management**: จัดการไฟล์เอกสารพร้อม search, filter, และ pagination
-- **Users Management**: จัดการผู้ใช้, roles, และ permissions
-- **Reports & Analytics**: รายงานและสถิติการใช้งานระบบ
-- **Settings**: การตั้งค่าระบบและ preferences
-- **Profile**: จัดการข้อมูลส่วนตัวและ security settings
+### 📊 Dashboard
+- **Real-time Statistics** - สถิติเอกสาร, ผู้ใช้, หมวดหมู่, พื้นที่ใช้งาน
+- **Recent Documents** - แสดงเอกสารล่าสุด 5 รายการ
+- **Storage Usage Indicator** - แสดงการใช้พื้นที่แบบ Smart Color Coding
+- **Quick Actions** - ปุ่มลัดสำหรับการทำงานหลัก
 
-### ⚙️ Technical Features
-- **NestJS Framework**: Backend framework ที่มีประสิทธิภาพ
-- **TypeORM**: Database ORM สำหรับ PostgreSQL
-- **Handlebars**: Template engine พร้อม layouts และ partials
-- **Tailwind CSS v4**: Auto-build และ watch system
-- **TypeScript**: Type-safe development
+### 📄 Document Management
+- **File Upload** - อัพโหลดไฟล์หลากหลายประเภท (PDF, DOC, XLS, PPT, Images)
+- **Drag & Drop Interface** - อินเทอร์เฟซลากวางไฟล์
+- **File Preview** - แสดงตัวอย่างไฟล์ก่อนอัพโหลด
+- **Progress Tracking** - แสดงความคืบหน้าการอัพโหลด
+- **Pagination** - แบ่งหน้าละ 5 รายการ
+- **File Type Icons** - ไอคอนตามประเภทไฟล์
+- **File Size Validation** - จำกัดขนาดไฟล์สูงสุด 50MB
 
-## 📁 โครงสร้างโปรเจ็กต์
+### 🗂️ Category Management
+- **CRUD Operations** - สร้าง, อ่าน, แก้ไข, ลบหมวดหมู่
+- **Active/Inactive Status** - เปิด/ปิดใช้งานหมวดหมู่
+- **Search & Filter** - ค้นหาและกรองหมวดหมู่
+- **Admin Only Access** - เข้าถึงได้เฉพาะ Administrator
+
+### 👥 User Management
+- **User CRUD** - จัดการข้อมูลผู้ใช้
+- **Role Assignment** - กำหนด Role ให้ผู้ใช้
+- **Active Status Control** - เปิด/ปิดใช้งานบัญชี
+
+### 🎨 UI/UX
+- **Responsive Design** - รองรับทุกขนาดหน้าจอ
+- **Modern Interface** - ออกแบบด้วย Tailwind CSS v4
+- **Mobile Sidebar** - เมนูสำหรับมือถือพร้อม Overlay
+- **SweetAlert2 Integration** - การแจ้งเตือนที่สวยงาม
+- **Loading States** - แสดงสถานะการโหลด
+
+## 🛠️ Tech Stack
+
+### Backend
+- **NestJS** - Node.js Framework
+- **TypeORM** - ORM สำหรับ Database
+- **PostgreSQL** - ฐานข้อมูล
+- **Express Session** - Session Management
+- **Multer** - File Upload Handling
+- **bcrypt** - Password Hashing
+
+### Frontend
+- **Handlebars** - Template Engine
+- **Tailwind CSS v4** - CSS Framework
+- **Font Awesome** - Icons
+- **SweetAlert2** - Alert/Modal Library
+
+### Development Tools
+- **TypeScript** - Type Safety
+- **ESLint** - Code Linting
+- **Prettier** - Code Formatting
+- **Jest** - Testing Framework
+- **Concurrently** - Run Multiple Commands
+
+## 📁 Project Structure
 
 ```
-dms-system/
+dms-system-final/
 ├── src/
-│   ├── auth/                    # Authentication module
-│   │   ├── auth.controller.ts   # Login, Register, Forgot Password
+│   ├── auth/                    # Authentication Module
+│   │   ├── auth.controller.ts
+│   │   ├── auth.service.ts
 │   │   └── auth.module.ts
-│   ├── backend/                 # Backend dashboard module
-│   │   ├── backend.controller.ts # Dashboard, Documents, Users, etc.
-│   │   └── backend.module.ts
-│   ├── users/                   # User management
-│   │   ├── user.entity.ts       # User entity
-│   │   └── user.module.ts
-│   ├── roles/                   # Role management
-│   │   ├── role.entity.ts       # Role entity
+│   ├── backend/                 # Backend Dashboard Module
+│   │   ├── backend.controller.ts
+│   │   ├── backend.module.ts
+│   │   └── backend.service.ts
+│   ├── categories/              # Category Management Module
+│   │   ├── category.entity.ts
+│   │   ├── category.service.ts
+│   │   ├── category.controller.ts
+│   │   └── category.module.ts
+│   ├── database/                # Database Configuration
+│   │   ├── database.module.ts
+│   │   ├── seed.ts
+│   │   └── sync.ts
+│   ├── documents/               # Document Management Module
+│   │   ├── document.entity.ts
+│   │   ├── document.service.ts
+│   │   ├── document.controller.ts
+│   │   └── document.module.ts
+│   ├── middleware/              # Custom Middleware
+│   │   └── auth.middleware.ts
+│   ├── roles/                   # Role Management Module
+│   │   ├── role.entity.ts
+│   │   ├── role.service.ts
 │   │   └── role.module.ts
-│   ├── database/                # Database configuration
-│   ├── views/                   # Handlebars templates
-│   │   ├── layouts/             # Layout templates
-│   │   │   ├── frontlayout.hbs  # Frontend layout
-│   │   │   └── backlayout.hbs   # Backend layout
-│   │   ├── partials/            # Reusable components
-│   │   │   ├── navbar.hbs       # Navigation bar
-│   │   │   ├── footer.hbs       # Footer
-│   │   │   ├── sidebar.hbs      # Backend sidebar
-│   │   │   └── header.hbs       # Backend header
-│   │   ├── auth/                # Authentication pages
-│   │   │   ├── login.hbs        # Login page
-│   │   │   ├── register.hbs     # Register page
-│   │   │   └── forgotpassword.hbs # Forgot password page
-│   │   ├── back/                # Backend pages
-│   │   │   ├── dashboard.hbs    # Dashboard
-│   │   │   ├── documents.hbs    # Documents management
-│   │   │   ├── users.hbs        # Users management
-│   │   │   ├── reports.hbs      # Reports & analytics
-│   │   │   ├── settings.hbs     # System settings
-│   │   │   └── profile.hbs      # User profile
-│   │   └── front/               # Frontend pages
-│   ├── assets/                  # Static assets
-│   │   └── tailwind.css         # Tailwind CSS source
-│   ├── app.controller.ts        # Main app controller
-│   ├── app.module.ts            # Main app module
-│   ├── app.service.ts           # Main app service
-│   └── main.ts                  # Application entry point
-├── public/                      # Static files
-│   └── css/                     # Compiled CSS
-│       └── style.css            # Compiled Tailwind CSS
-├── dist/                        # Compiled JavaScript
-├── test/                        # Test files
-├── .env                         # Environment variables (ไม่ commit)
-├── .env.example                 # Environment variables template
-├── package.json                 # Dependencies และ scripts
-├── tailwind.config.js           # Tailwind configuration
-├── tsconfig.json                # TypeScript configuration
-└── README.md                    # Project documentation
+│   ├── types/                   # TypeScript Type Definitions
+│   │   └── session.types.ts
+│   ├── users/                   # User Management Module
+│   │   ├── user.entity.ts
+│   │   ├── user.service.ts
+│   │   ├── user.controller.ts
+│   │   └── user.module.ts
+│   ├── views/                   # Handlebars Templates
+│   │   ├── layouts/
+│   │   │   ├── authlayout.hbs
+│   │   │   └── backlayout.hbs
+│   │   ├── auth/
+│   │   │   ├── login.hbs
+│   │   │   ├── register.hbs
+│   │   │   └── forgotpassword.hbs
+│   │   ├── back/
+│   │   │   ├── dashboard.hbs
+│   │   │   ├── documents.hbs
+│   │   │   ├── categories.hbs
+│   │   │   ├── users.hbs
+│   │   │   ├── reports.hbs
+│   │   │   ├── settings.hbs
+│   │   │   └── profile.hbs
+│   │   └── partials/
+│   ├── assets/                  # Static Assets
+│   │   └── tailwind.css
+│   ├── app.module.ts           # Main App Module
+│   ├── app.controller.ts       # Main App Controller
+│   ├── app.service.ts          # Main App Service
+│   └── main.ts                 # Application Entry Point
+├── public/                     # Static Files
+│   ├── css/
+│   │   └── style.css          # Compiled Tailwind CSS
+│   └── js/
+├── uploads/                    # Uploaded Files
+│   └── documents/
+├── test/                       # Test Files
+├── dist/                       # Compiled Output
+├── package.json               # Dependencies & Scripts
+├── tsconfig.json              # TypeScript Configuration
+├── tailwind.config.js         # Tailwind Configuration
+├── nest-cli.json              # NestJS CLI Configuration
+└── README.md                  # Project Documentation
 ```
 
-## 🛠️ การติดตั้งและใช้งาน
+## 🗄️ Database Schema
 
-### ข้อกำหนดระบบ
-- Node.js v18+ 
-- PostgreSQL 15+
-- npm หรือ yarn
+### Users Table
+```sql
+- id (UUID, Primary Key)
+- username (VARCHAR, Unique)
+- email (VARCHAR, Unique)
+- password (VARCHAR, Hashed)
+- firstName (VARCHAR)
+- lastName (VARCHAR)
+- roleId (INTEGER, Foreign Key)
+- isActive (BOOLEAN)
+- lastLoginAt (TIMESTAMP)
+- createdAt (TIMESTAMP)
+- updatedAt (TIMESTAMP)
+```
 
-### การติดตั้ง
+### Roles Table
+```sql
+- id (INTEGER, Primary Key)
+- name (VARCHAR) - Administrator, Manager, User
+- description (TEXT)
+- permissions (JSON)
+- isActive (BOOLEAN)
+- createdAt (TIMESTAMP)
+- updatedAt (TIMESTAMP)
+```
 
+### Categories Table
+```sql
+- id (UUID, Primary Key)
+- name (VARCHAR, Unique)
+- description (TEXT)
+- isActive (BOOLEAN)
+- createdAt (TIMESTAMP)
+- updatedAt (TIMESTAMP)
+```
+
+### Documents Table
+```sql
+- id (UUID, Primary Key)
+- title (VARCHAR)
+- description (TEXT)
+- filename (VARCHAR)
+- originalName (VARCHAR)
+- mimeType (VARCHAR)
+- size (BIGINT)
+- path (VARCHAR)
+- status (ENUM) - draft, published, archived, deleted
+- version (INTEGER)
+- ownerId (UUID, Foreign Key)
+- categoryId (UUID, Foreign Key)
+- downloadCount (INTEGER)
+- isActive (BOOLEAN)
+- createdAt (TIMESTAMP)
+- updatedAt (TIMESTAMP)
+```
+
+## 🔑 Role-based Access Control
+
+### Administrator (roleId = 1)
+- ✅ Dashboard
+- ✅ Documents (Full Access)
+- ✅ Categories (Full Access)
+- ✅ Users (Full Access)
+- ✅ Reports
+- ✅ Settings
+- ✅ Profile
+
+### Manager (roleId = 2)
+- ✅ Dashboard
+- ✅ Documents (Full Access)
+- ❌ Categories
+- ❌ Users
+- ✅ Reports
+- ❌ Settings
+- ✅ Profile
+
+### User (roleId = 3)
+- ✅ Dashboard
+- ✅ Documents (View/Upload Only)
+- ❌ Categories
+- ❌ Users
+- ❌ Reports
+- ❌ Settings
+- ✅ Profile
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+- Node.js (v18 or higher)
+- PostgreSQL (v12 or higher)
+- npm or yarn
+
+### 1. Clone Repository
 ```bash
-# Clone repository
 git clone <repository-url>
-cd dms-system
-
-# ติดตั้ง dependencies
-npm install
-
-# ตั้งค่า environment variables
-cp .env.example .env
-# แก้ไขไฟล์ .env ตามการตั้งค่าฐานข้อมูลของคุณ
-
-# ทดสอบการเชื่อมต่อฐานข้อมูล
-npm run test:db
+cd dms-system-final
 ```
 
-### ⚙️ การตั้งค่า Environment Variables
-
-สร้างไฟล์ `.env` จากไฟล์ `.env.example` และแก้ไขค่าต่างๆ ตามสภาพแวดล้อมของคุณ:
-
+### 2. Install Dependencies
 ```bash
+npm install
+```
+
+### 3. Environment Configuration
+สร้างไฟล์ `.env` ในโฟลเดอร์ root:
+```env
 # Database Configuration
-DB_HOST=localhost          # Database host
-DB_PORT=5432              # Database port
-DB_USERNAME=postgres      # Database username
-DB_PASSWORD=123456        # Database password
-DB_NAME=dms              # Database name
-DB_SSLMODE=disable       # SSL mode (disable/require)
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+DB_DATABASE=dms_system
+
+# Session Configuration
+SESSION_SECRET=your_super_secret_key_here
 
 # Application Configuration
-NODE_ENV=development     # Environment (development/production)
-PORT=3000               # Application port
-
-# JWT Configuration (สำหรับอนาคต)
-JWT_SECRET=your_jwt_secret_here
-JWT_EXPIRES_IN=24h
-
-# Email Configuration (สำหรับอนาคต)
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USER=your_email@gmail.com
-MAIL_PASS=your_app_password
-MAIL_FROM=noreply@dmssystem.com
-
-# File Upload Configuration
-MAX_FILE_SIZE=100MB
-UPLOAD_PATH=./uploads
-
-# System Configuration
-SYSTEM_NAME=DMS System
-COMPANY_NAME=Your Company Ltd.
-ADMIN_EMAIL=admin@company.com
+PORT=3000
+NODE_ENV=development
 ```
 
-**⚠️ สำคัญ**: 
-- ไฟล์ `.env` จะไม่ถูก commit เข้า git repository เพื่อความปลอดภัย
-- ใช้ไฟล์ `.env.example` เป็น template สำหรับการตั้งค่า
-- แก้ไขค่า `DB_PASSWORD` และค่าอื่นๆ ให้ตรงกับระบบของคุณ
-
-### การรันโปรเจ็กต์
-
+### 4. Database Setup
 ```bash
-# Development mode (พร้อม auto-reload CSS และ HBS)
-npm run start:dev
+# Test database connection
+npm run db:test
 
-# Production build
-npm run build:prod
-
-# Production mode
-npm run start:prod
-```
-
-### Scripts ที่สำคัญ
-
-```bash
-# CSS และ Watch commands
-npm run build:css      # Build Tailwind CSS
-npm run watch:css      # Watch CSS changes
-npm run watch:hbs      # Watch HBS template changes
-
-# Development
-npm run start:dev      # รัน dev server พร้อม auto-reload
-npm run start:debug    # รัน debug mode
-
-# Production
-npm run build:prod     # Build สำหรับ production
-npm run start:prod     # รัน production server
-
-# Database
-npm run test:db        # ทดสอบการเชื่อมต่อฐานข้อมูล
-npm run db:sync        # สร้างตารางในฐานข้อมูล (sync schema)
-npm run db:seed        # เพิ่มข้อมูลเริ่มต้น (roles และ admin user)
-
-# Testing
-npm run test           # รัน unit tests
-npm run test:e2e       # รัน e2e tests
-npm run test:cov       # รัน test coverage
-
-# Code Quality
-npm run lint           # รัน ESLint
-npm run format         # รัน Prettier
-```
-
-### 🗄️ การตั้งค่าฐานข้อมูล
-
-```bash
-# 1. ทดสอบการเชื่อมต่อฐานข้อมูล
-npm run test:db
-
-# 2. สร้างตารางในฐานข้อมูล
+# Sync database schema
 npm run db:sync
 
-# 3. เพิ่มข้อมูลเริ่มต้น (roles และ admin user)
+# Seed initial data
 npm run db:seed
 ```
 
-**ข้อมูล Admin User ที่สร้างโดย Seed:**
-- Username: `admin`
-- Password: `admin123`
-- Email: `admin@example.com`
-- Role: Administrator
-
-## 🌐 Routes และ Endpoints
-
-### Frontend Routes
-- `/` - หน้าแรก (Landing page)
-- `/auth/login` - หน้า Login
-- `/auth/register` - หน้า Register  
-- `/auth/forgot-password` - หน้า Forgot Password
-
-### Backend Routes
-- `/backend/dashboard` - Dashboard หลัก
-- `/backend/documents` - จัดการเอกสาร
-- `/backend/users` - จัดการผู้ใช้
-- `/backend/reports` - รายงานและสถิติ
-- `/backend/settings` - ตั้งค่าระบบ
-- `/backend/profile` - โปรไฟล์ผู้ใช้
-
-## 🎨 UI/UX Features
-
-### Design System
-- **Color Scheme**: Blue gradient สำหรับ primary, Green สำหรับ success, Red สำหรับ danger
-- **Typography**: Modern font stack พร้อม responsive sizing
-- **Components**: Cards, Buttons, Forms, Tables, Charts พร้อม hover effects
-- **Animations**: Smooth transitions และ transform effects
-
-### Responsive Design
-- **Mobile First**: ออกแบบสำหรับมือถือก่อน
-- **Breakpoints**: sm, md, lg, xl ตาม Tailwind CSS
-- **Navigation**: Mobile hamburger menu และ desktop navigation
-
-## 🔧 การพัฒนาต่อ
-
-### เพิ่มหน้าใหม่
-1. สร้างไฟล์ `.hbs` ใน `src/views/`
-2. เพิ่ม route ใน controller ที่เกี่ยวข้อง
-3. รัน `npm run start:dev` เพื่อดู auto-reload
-
-### เพิ่ม CSS ใหม่
-1. แก้ไขไฟล์ `src/assets/tailwind.css`
-2. ระบบจะ auto-build CSS เมื่อมีการเปลี่ยนแปลง
-
-### เพิ่ม Entity ใหม่
-1. สร้างไฟล์ `.entity.ts` ใน module ที่เกี่ยวข้อง
-2. เพิ่มใน `app.module.ts`
-3. รัน migration (ถ้าใช้)
-
-### เพิ่ม Environment Variables ใหม่
-1. เพิ่มตัวแปรใน `.env.example`
-2. อัพเดทไฟล์ `.env` ของคุณ
-3. เพิ่มการใช้งานใน `src/main.ts` หรือ config files
-
-## 📦 Dependencies หลัก
-
-### Production Dependencies
-- `@nestjs/core` - NestJS framework
-- `@nestjs/typeorm` - TypeORM integration
-- `@nestjs/config` - Configuration management
-- `typeorm` - Database ORM
-- `pg` - PostgreSQL driver
-- `hbs` - Handlebars template engine
-- `dotenv` - Environment variables loader
-
-### Development Dependencies
-- `tailwindcss` - CSS framework
-- `typescript` - TypeScript compiler
-- `concurrently` - รัน multiple commands
-- `chokidar-cli` - File watching
-- `eslint` - Code linting
-- `prettier` - Code formatting
-
-## 🚀 Deployment
-
-### การ Deploy บน Production
-1. ตั้งค่า environment variables บน production server
-2. แก้ไข `.env` ให้เหมาะสมกับ production (NODE_ENV=production)
-3. รัน `npm run build:prod`
-4. รัน `npm run start:prod`
-5. ตั้งค่า reverse proxy (nginx/apache)
-6. ตั้งค่า SSL certificate
-
-### Environment Variables สำหรับ Production
+### 5. Build CSS
 ```bash
-NODE_ENV=production
-DB_HOST=your_production_db_host
-DB_PASSWORD=your_secure_password
-JWT_SECRET=your_very_secure_jwt_secret
+npm run build:css
 ```
 
-### Docker Support (อนาคต)
-- Dockerfile สำหรับ containerization
-- docker-compose.yml สำหรับ development
+### 6. Start Development Server
+```bash
+npm run start:dev
+```
 
-## 📝 License
+เซิร์ฟเวอร์จะรันที่ `http://localhost:3000`
 
-This project is [MIT licensed](LICENSE).
+## 📝 Available Scripts
 
-## 👥 Contributing
+### Development
+```bash
+npm run start:dev      # Start development server with hot reload
+npm run watch:css      # Watch Tailwind CSS changes
+npm run watch:hbs      # Watch Handlebars template changes
+```
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Production
+```bash
+npm run build:prod     # Build for production
+npm run start:prod     # Start production server
+```
+
+### Database
+```bash
+npm run db:test        # Test database connection
+npm run db:sync        # Sync database schema
+npm run db:seed        # Seed initial data
+```
+
+### Code Quality
+```bash
+npm run lint           # Run ESLint
+npm run format         # Format code with Prettier
+npm run test           # Run tests
+npm run test:watch     # Run tests in watch mode
+npm run test:cov       # Run tests with coverage
+```
+
+## 🔧 Configuration
+
+### Tailwind CSS
+ไฟล์ `tailwind.config.js`:
+```javascript
+module.exports = {
+  content: ["./src/views/**/*.hbs"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+### TypeORM
+การตั้งค่าฐานข้อมูลใน `src/database/database.module.ts`
+
+### Session
+การตั้งค่า Session ใน `src/main.ts`
+
+## 📱 Responsive Design
+
+ระบบรองรับการใช้งานบนอุปกรณ์ต่างๆ:
+- **Desktop** - เมนู Sidebar แบบเต็ม
+- **Tablet** - เมนู Sidebar แบบยุบได้
+- **Mobile** - เมนู Hamburger พร้อม Overlay
+
+## 🔒 Security Features
+
+- **Password Hashing** - ใช้ bcrypt สำหรับเข้ารหัสรหัสผ่าน
+- **Session Security** - HTTP Only Cookies
+- **File Upload Validation** - ตรวจสอบประเภทและขนาดไฟล์
+- **SQL Injection Protection** - ใช้ TypeORM ORM
+- **XSS Protection** - Handlebars Template Engine
+- **Role-based Authorization** - ควบคุมสิทธิ์ตาม Role
+
+## 🐛 Troubleshooting
+
+### Database Connection Issues
+```bash
+# ตรวจสอบการเชื่อมต่อฐานข้อมูล
+npm run db:test
+```
+
+### CSS Not Loading
+```bash
+# Build CSS ใหม่
+npm run build:css
+```
+
+### File Upload Issues
+- ตรวจสอบโฟลเดอร์ `uploads/documents/` มีอยู่หรือไม่
+- ตรวจสอบสิทธิ์การเขียนไฟล์
+
+## 📄 License
+
+This project is licensed under the UNLICENSED License.
+
+## 👥 Contributors
+
+- **Developer** - ระบบจัดการเอกสาร DMS
 
 ## 📞 Support
 
-หากมีปัญหาหรือข้อสงสัย กรุณาติดต่อ:
-- Email: support@dmssystem.com
-- GitHub Issues: [Create an issue](https://github.com/your-repo/dms-system/issues)
+หากมีปัญหาหรือข้อสงสัย กรุณาติดต่อทีมพัฒนา
 
 ---
 
-**DMS System** - Document Management System ที่ทันสมัยและใช้งานง่าย 🚀
+**สร้างด้วย ❤️ โดยใช้ NestJS + TypeORM + PostgreSQL + Tailwind CSS**
