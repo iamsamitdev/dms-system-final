@@ -64,6 +64,13 @@
                     </div>
                 {{/if}}
 
+                <!-- Success Message -->
+                {{#if success}}
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center space-x-3">
+                        <p class="text-green-700 text-sm">{{success}}</p>
+                    </div>
+                {{/if}}
+
                 <!-- Login Form -->
                 <form action="/auth/login" method="POST" class="space-y-6">
                     <!-- Username Field -->
