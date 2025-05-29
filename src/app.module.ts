@@ -7,6 +7,8 @@ import { UserModule } from './users/user.module';
 import { RoleModule } from './roles/role.module';
 import { AuthModule } from './auth/auth.module';
 import { BackendModule } from './backend/backend.module';
+import { CategoryModule } from './categories/category.module';
+import { DocumentModule } from './documents/document.module';
 import { AppDataSource } from './database/data-source';
 import { AuthMiddleware } from './middleware/auth.middleware';
 
@@ -21,6 +23,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
     RoleModule,
     AuthModule,
     BackendModule,
+    CategoryModule,
+    DocumentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
