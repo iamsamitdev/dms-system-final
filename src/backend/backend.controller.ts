@@ -11,11 +11,18 @@ export class BackendController {
   @Render('back/dashboard')
   async getDashboard(@Req() req: Request) {
     const user = await this.getUserWithRole(req)
+    
+    // ตรวจสอบ error message จาก URL parameter
+    const errorMessage = req.query.error === 'access_denied' 
+      ? 'คุณไม่มีสิทธิ์เข้าถึงหน้าที่ต้องการ' 
+      : null
+    
     return {
       title: 'Dashboard',
       description: 'DMS System Admin Dashboard - Monitor and manage your document management system',
       layout: 'layouts/backlayout',
-      user
+      user,
+      error: errorMessage
     }
   }
 

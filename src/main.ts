@@ -48,6 +48,15 @@ async function bootstrap() {
     return str.toUpperCase()
   })
 
+  // เพิ่ม helpers สำหรับการควบคุมสิทธิ์
+  hbs.registerHelper('eq', function(a: any, b: any) {
+    return a === b
+  })
+
+  hbs.registerHelper('or', function() {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean)
+  })
+
   await app.listen(process.env.PORT ?? 3000)
 }
 bootstrap();

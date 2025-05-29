@@ -29,6 +29,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes('backend/*'); // ป้องกันเฉพาะ routes ที่ขึ้นต้นด้วย /backend
+      .forRoutes('backend'); // ใช้กับ /backend และ /backend/* ทั้งหมด
   }
 }

@@ -17,7 +17,7 @@
     "start:prod": "node dist/src/main",
     "build": "nest build",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test:db": "ts-node test-db-connection.ts",
+    "db:test": "ts-node test-db-connection.ts",
     "db:seed": "ts-node src/database/seed.ts",
     "db:sync": "ts-node src/database/sync.ts",
     "test": "jest",
