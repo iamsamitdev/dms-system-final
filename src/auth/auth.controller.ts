@@ -56,10 +56,52 @@ export class AuthController {
             lastName: string,
             username: string,
             email: string, 
-            password: string 
+            password: string,
+            confirmPassword: string
         }, 
         @Res() res: Response) {
         try {
+            // ตรวจสอบรหัสผ่านตรงกันหรือไม่
+            if(body.password !== body.confirmPassword) {
+                return res.render("auth/register", {
+                    title: "Register",
+                    error: "รหัสผ่านไม่ตรงกัน"
+                })
+            }
+
+            // ตรวจสอบว่า username ซ้ำหรือไม่
+            const existingUser = await this.usersService.findByUsername(body.username)
+            if(existingUser) {
+                return res.render("auth/register", {
+                    title: "Register",
+                    error: "ชื่อผู้ใช้นี้มีผู้ใช้แล้ว กรุณาเลือกชื่อผู้ใช้ใหม่"
+                })
+            }
+
+            // ตรวจสอบว่า email ซ้ำหรือไม่
+            const existingEmail = await this.usersService.findByEmail(body.email)
+            if(existingEmail) {
+                return res.render("auth/register", {
+                    title: "Register",
+                    error: "อีเมลนี้มีผู้ใช้แล้ว กรุณาใช้ที่อยู่อีเมลอื่น"
+                })
+            }
+
+            // สร้าง user ใหม่ในฐานข้อมูล
+            await this.usersService.create({
+                firstName: body.firstName,
+                lastName: body.lastName,
+                username: body.username,
+                email: body.email,
+                password: await bcrypt.hash(body.password, 10),
+                roleId: 3 // สมมุติว่า roleId 3 คือผู้ใช้ทั่วไป
+            })
+
+            // ถ้าสร้างสำเร็จ ให้ redirect ไปที่หน้า login
+            return res.render("auth/login", {
+                title: "Login",
+                success: "ลงทะเบียนสำเร็จแล้ว กรุณาเข้าสู่ระบบ",            
+            })
 
         } catch (error) {
             return res.render("auth/register", {
