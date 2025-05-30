@@ -161,7 +161,7 @@
                                     <i class="{{getFileIcon mimeType}} {{getFileIconColor mimeType}}"></i>
                                 </div>
                                 <div>
-                                    <div class="text-sm font-medium text-gray-900">{{originalName}}</div>
+                                    <div class="text-sm font-medium text-gray-900">{{getDisplayName this}}</div>
                                     <div class="text-sm text-gray-500">{{description}}</div>
                                 </div>
                             </div>
@@ -171,8 +171,8 @@
                                 {{getFileType mimeType}}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{formatFileSize size}}</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{formatDate createdAt}}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{#if formattedSize}}{{formattedSize}}{{else}}{{formatFileSize size}}{{/if}}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{#if formattedDate}}{{formattedDate}}{{else}}{{formatDate createdAt}}{{/if}}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 {{#if owner}}

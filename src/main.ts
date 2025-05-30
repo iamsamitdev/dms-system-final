@@ -11,6 +11,12 @@ dotenv.config()
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
+  // ตั้งค่า encoding สำหรับรองรับภาษาไทย
+  app.use((req, res, next) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    next()
+  })
+
   // ตั้งค่า session middleware
   app.use(
     session({
@@ -185,6 +191,56 @@ async function bootstrap() {
     const first = firstName ? firstName.charAt(0).toUpperCase() : ''
     const last = lastName ? lastName.charAt(0).toUpperCase() : ''
     return first + last
+  })
+
+  // Helper สำหรับแสดงชื่อไฟล์ที่ถูกต้อง
+  hbs.registerHelper('getDisplayName', function (document) {
+    // ลำดับความสำคัญ: displayName > originalName > title > filename
+    if (document.displayName) {
+      return document.displayName
+    }
+    if (document.originalName) {
+      return document.originalName
+    }
+    if (document.title) {
+      return document.title
+    }
+    return document.filename || 'ไม่ระบุชื่อไฟล์'
+  })
+
+  // Helper สำหรับ debug ข้อมูล
+  hbs.registerHelper('debug', function (data) {
+    console.log('Debug data:', JSON.stringify(data, null, 2))
+    return ''
+  })
+
+  // Helper สำหรับถอดรหัสชื่อไฟล์จาก Base64
+  hbs.registerHelper('decodeFilename', function (filename) {
+    try {
+      if (!filename) return 'ไม่ระบุชื่อไฟล์'
+      
+      const parts = filename.split('-')
+      if (parts.length >= 4 && parts[0] === 'doc') {
+        // ตรวจสอบว่าเป็นไฟล์ที่เข้ารหัสแล้วหรือไม่
+        const encodedPart = parts.slice(3).join('-')
+        const lastDotIndex = encodedPart.lastIndexOf('.')
+        
+        if (lastDotIndex > 0) {
+          const encodedName = encodedPart.substring(0, lastDotIndex)
+          const ext = encodedPart.substring(lastDotIndex)
+          
+          try {
+            const decodedName = Buffer.from(encodedName, 'base64').toString('utf8')
+            return decodedName + ext
+          } catch {
+            return filename // ถ้าถอดรหัสไม่ได้ให้ใช้ชื่อเดิม
+          }
+        }
+      }
+      return filename
+    } catch (error) {
+      return filename
+    }
   })
 
   // Pagination helpers
