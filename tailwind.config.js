@@ -8,7 +8,14 @@ module.exports = {
     "./views/**/*.hbs"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'display': ['Poppins', 'system-ui', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 } 
