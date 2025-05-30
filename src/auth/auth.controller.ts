@@ -63,6 +63,7 @@ export class AuthController {
     // Logout endpoint
     @Get("logout")
     async logout(@Req() req: Request, @Res() res: Response) {
+        // ลบข้อมูลผู้ใช้ใน session
         try {
             // ทำลาย session
             req.session.destroy((err) => {
@@ -70,13 +71,11 @@ export class AuthController {
                     console.error("Session destroy error:", err);
                     return res.redirect("/backend/dashboard");
                 }
-                
-                // Clear cookie
-                res.clearCookie('connect.sid'); // ชื่อ cookie อาจแตกต่างกันตาม session config
-                
-                // Redirect ไปหน้า login พร้อม success message
-                return res.redirect("/auth/login?message=logout_success");
-            });
+                // ล้าง cookie
+                res.clearCookie("connect.sid");
+                // Redirect ไปที่หน้า login
+                return res.redirect("/auth/login?message=logout_success")
+            })
         } catch (error) {
             console.error("Logout error:", error);
             return res.redirect("/backend/dashboard");
