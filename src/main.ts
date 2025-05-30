@@ -11,6 +11,14 @@ dotenv.config()
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
+  // ตั้งค่า body parser สำหรับจัดการ encoding
+  app.use(require('express').json({ limit: '50mb' }));
+  app.use(require('express').urlencoded({ 
+    extended: true, 
+    limit: '50mb',
+    parameterLimit: 50000 
+  }));
+
   // ตั้งค่า session middleware
   app.use(
     session({

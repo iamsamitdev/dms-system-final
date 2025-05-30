@@ -7,10 +7,11 @@ import { UserModule } from './users/user.module';
 import { RoleModule } from './roles/role.module';
 import { AuthModule } from './auth/auth.module';
 import { BackendModule } from './backend/backend.module';
-import { CategoryModule } from './categories/category.module';
-import { DocumentModule } from './documents/document.module';
 import { AppDataSource } from './database/data-source';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { EncodingMiddleware } from './middleware/encoding.middleware';
+import { CategoryModule } from './categories/category.module';
+import { DocumentModule } from './documents/document.module';
 
 @Module({
   imports: [
@@ -24,13 +25,18 @@ import { AuthMiddleware } from './middleware/auth.middleware';
     AuthModule,
     BackendModule,
     CategoryModule,
-    DocumentModule,
+    DocumentModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    // เพิ่ม EncodingMiddleware สำหรับจัดการ encoding
+    consumer
+      .apply(EncodingMiddleware)
+      .forRoutes('*'); // ใช้กับทุก route
+      
     consumer
       .apply(AuthMiddleware)
       .forRoutes('backend'); // ใช้กับ /backend และ /backend/* ทั้งหมด

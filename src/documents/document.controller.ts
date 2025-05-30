@@ -141,11 +141,28 @@ export class DocumentController {
                 cb(null, uploadPath)
             },
             filename: (req, file, cb) => {
+                // แก้ไข encoding ของชื่อไฟล์ก่อน
+                let correctedOriginalName = file.originalname;
+                
+                // ตรวจสอบและแก้ไข encoding ปัญหา
+                try {
+                    // ถ้าชื่อไฟล์เป็น UTF-8 ที่ผิด encoding ให้แก้ไข
+                    const testBuffer = Buffer.from(file.originalname, 'latin1');
+                    const testString = testBuffer.toString('utf8');
+                    
+                    // ตรวจสอบว่าเป็นภาษาไทยหรือไม่
+                    if (testString.match(/[\u0E00-\u0E7F]/)) {
+                        correctedOriginalName = testString;
+                    }
+                } catch (error) {
+                    console.log('Encoding correction failed, using original name');
+                }
+                
                 // สร้างชื่อไฟล์ที่ปลอดภัยและรองรับภาษาไทย
                 const timestamp = Date.now()
                 const randomSuffix = Math.round(Math.random() * 1E9)
-                const ext = extname(file.originalname)
-                const nameWithoutExt = file.originalname.replace(ext, '')
+                const ext = extname(correctedOriginalName)
+                const nameWithoutExt = correctedOriginalName.replace(ext, '')
                 
                 // เข้ารหัสชื่อไฟล์เป็น Base64
                 const encodedName = Buffer.from(nameWithoutExt, 'utf8').toString('base64')
@@ -153,10 +170,14 @@ export class DocumentController {
                 
                 console.log('File upload info:', {
                     originalName: file.originalname,
+                    correctedOriginalName,
                     nameWithoutExt,
                     encodedName,
                     safeFilename
                 })
+                
+                // เก็บชื่อไฟล์ที่แก้ไขแล้วใน file object
+                file.originalname = correctedOriginalName;
                 
                 cb(null, safeFilename)
             }

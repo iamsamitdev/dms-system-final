@@ -20,6 +20,61 @@ export class DocumentService {
         private documentRepository: Repository<Document>
     ) {}
 
+    // ฟังก์ชันสำหรับถอดรหัสชื่อไฟล์จาก Base64
+    private decodeFilename(filename: string): string {
+        try {
+            const parts = filename.split('-')
+            if (parts.length >= 4 && parts[0] === 'doc') {
+                // ตรวจสอบว่าเป็นไฟล์ที่เข้ารหัสแล้วหรือไม่
+                const encodedPart = parts.slice(3).join('-')
+                const lastDotIndex = encodedPart.lastIndexOf('.')
+                
+                if (lastDotIndex > 0) {
+                    const encodedName = encodedPart.substring(0, lastDotIndex)
+                    const ext = encodedPart.substring(lastDotIndex)
+                    
+                    try {
+                        const decodedName = Buffer.from(encodedName, 'base64').toString('utf8')
+                        return decodedName + ext
+                    } catch {
+                        return filename // ถ้าถอดรหัสไม่ได้ให้ใช้ชื่อเดิม
+                    }
+                }
+            }
+            return filename
+        } catch (error) {
+            return filename
+        }
+    }
+
+    // ฟังก์ชันสำหรับเพิ่มข้อมูลการแสดงผลให้กับเอกสาร
+    private enhanceDocumentDisplay(document: Document): Document {
+        return {
+            ...document,
+            displayName: document.originalName || this.decodeFilename(document.filename),
+            fileExtension: document.filename.split('.').pop()?.toLowerCase() || '',
+            formattedSize: this.formatFileSize(document.size),
+            formattedDate: document.createdAt ? new Date(document.createdAt).toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }) : ''
+        } as Document
+    }
+
+    // ฟังก์ชันสำหรับแปลงขนาดไฟล์เป็นรูปแบบที่อ่านง่าย
+    private formatFileSize(bytes: number): string {
+        if (bytes === 0) return '0 Bytes'
+        
+        const k = 1024
+        const sizes = ['Bytes', 'KB', 'MB', 'GB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    }
+
     // ดึงเอกสารพร้อม pagination
     async findWithPagination(page: number = 1, limit: number = 5): Promise<PaginationResult> {
         try {
@@ -42,10 +97,13 @@ export class DocumentService {
             
             const totalPages = Math.ceil(total / limit)
             
-            console.log(`DocumentService: Found ${documents.length} documents, total: ${total}, totalPages: ${totalPages}`)
+            // เพิ่มข้อมูลการแสดงผลให้กับเอกสารทั้งหมด
+            const enhancedDocuments = documents.map(doc => this.enhanceDocumentDisplay(doc))
+            
+            console.log(`DocumentService: Found ${enhancedDocuments.length} documents, total: ${total}, totalPages: ${totalPages}`)
             
             return {
-                documents,
+                documents: enhancedDocuments,
                 total,
                 page,
                 limit,
@@ -91,19 +149,24 @@ export class DocumentService {
             
             console.log('DocumentService: Documents with relations:', documents.length)
             
-            if (documents.length > 0) {
+            // เพิ่มข้อมูลการแสดงผลให้กับเอกสารทั้งหมด
+            const enhancedDocuments = documents.map(doc => this.enhanceDocumentDisplay(doc))
+            
+            if (enhancedDocuments.length > 0) {
                 console.log('DocumentService: Sample document:', {
-                    id: documents[0].id,
-                    title: documents[0].title,
-                    ownerId: documents[0].ownerId,
-                    categoryId: documents[0].categoryId,
-                    hasOwner: !!documents[0].owner,
-                    hasCategory: !!documents[0].category,
-                    ownerName: documents[0].owner ? `${documents[0].owner.firstName} ${documents[0].owner.lastName}` : 'No owner'
+                    id: enhancedDocuments[0].id,
+                    title: enhancedDocuments[0].title,
+                    originalName: enhancedDocuments[0].originalName,
+                    displayName: (enhancedDocuments[0] as any).displayName,
+                    ownerId: enhancedDocuments[0].ownerId,
+                    categoryId: enhancedDocuments[0].categoryId,
+                    hasOwner: !!enhancedDocuments[0].owner,
+                    hasCategory: !!enhancedDocuments[0].category,
+                    ownerName: enhancedDocuments[0].owner ? `${enhancedDocuments[0].owner.firstName} ${enhancedDocuments[0].owner.lastName}` : 'No owner'
                 })
             }
             
-            return documents
+            return enhancedDocuments
         } catch (error) {
             console.error('DocumentService: Error in findAll:', error)
             throw error
@@ -112,10 +175,12 @@ export class DocumentService {
 
     // ดึงเอกสารตาม ID
     async findById(id: string): Promise<Document | null> {
-        return this.documentRepository.findOne({
+        const document = await this.documentRepository.findOne({
             where: { id, isActive: true },
             relations: ['owner', 'category']
         })
+        
+        return document ? this.enhanceDocumentDisplay(document) : null
     }
 
     // สร้างเอกสารใหม่
@@ -132,7 +197,8 @@ export class DocumentService {
         status?: DocumentStatus
     }): Promise<Document> {
         const document = this.documentRepository.create(documentData)
-        return this.documentRepository.save(document)
+        const savedDocument = await this.documentRepository.save(document)
+        return this.enhanceDocumentDisplay(savedDocument)
     }
 
     // อัพเดทเอกสาร
