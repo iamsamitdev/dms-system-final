@@ -97,6 +97,38 @@ export class DocumentController {
         return this.documentService.findAll()
     }
 
+    // ฟังก์ชันสำหรับสร้างชื่อไฟล์ที่ปลอดภัยและรองรับภาษาไทย
+    private generateSafeFilename(originalName: string): string {
+        const timestamp = Date.now()
+        const randomSuffix = Math.round(Math.random() * 1E9)
+        const ext = extname(originalName)
+        
+        // ลบ extension ออกจากชื่อไฟล์เดิม
+        const nameWithoutExt = originalName.replace(ext, '')
+        
+        // เข้ารหัสชื่อไฟล์เป็น Base64 เพื่อรองรับภาษาไทย
+        const encodedName = Buffer.from(nameWithoutExt, 'utf8').toString('base64')
+        
+        // สร้างชื่อไฟล์ใหม่
+        return `doc-${timestamp}-${randomSuffix}-${encodedName}${ext}`
+    }
+
+    // ฟังก์ชันสำหรับถอดรหัสชื่อไฟล์
+    private decodeFilename(filename: string): string {
+        try {
+            const parts = filename.split('-')
+            if (parts.length >= 4) {
+                const encodedName = parts.slice(3, -1).join('-') // เอาส่วนที่เป็น encoded name
+                const ext = extname(filename)
+                const decodedName = Buffer.from(encodedName, 'base64').toString('utf8')
+                return decodedName + ext
+            }
+            return filename
+        } catch (error) {
+            return filename
+        }
+    }
+
     // API: อัพโหลดเอกสาร
     @Post('upload')
     @UseInterceptors(FileInterceptor('file', {
@@ -109,12 +141,34 @@ export class DocumentController {
                 cb(null, uploadPath)
             },
             filename: (req, file, cb) => {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+                // สร้างชื่อไฟล์ที่ปลอดภัยและรองรับภาษาไทย
+                const timestamp = Date.now()
+                const randomSuffix = Math.round(Math.random() * 1E9)
                 const ext = extname(file.originalname)
-                cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`)
+                const nameWithoutExt = file.originalname.replace(ext, '')
+                
+                // เข้ารหัสชื่อไฟล์เป็น Base64
+                const encodedName = Buffer.from(nameWithoutExt, 'utf8').toString('base64')
+                const safeFilename = `doc-${timestamp}-${randomSuffix}-${encodedName}${ext}`
+                
+                console.log('File upload info:', {
+                    originalName: file.originalname,
+                    nameWithoutExt,
+                    encodedName,
+                    safeFilename
+                })
+                
+                cb(null, safeFilename)
             }
         }),
         fileFilter: (req, file, cb) => {
+            // ตรวจสอบ encoding ของชื่อไฟล์
+            console.log('File filter info:', {
+                originalname: file.originalname,
+                mimetype: file.mimetype,
+                encoding: file.encoding
+            })
+            
             const allowedMimes = [
                 'application/pdf',
                 'application/msword',
@@ -150,6 +204,16 @@ export class DocumentController {
         @Res() res: Response
     ) {
         try {
+            console.log('Upload request received:', {
+                file: file ? {
+                    originalname: file.originalname,
+                    filename: file.filename,
+                    mimetype: file.mimetype,
+                    size: file.size
+                } : null,
+                body
+            })
+
             if (!file) {
                 return res.status(400).json({
                     success: false,
@@ -177,7 +241,7 @@ export class DocumentController {
                 title: body.title,
                 description: body.description || '',
                 filename: file.filename,
-                originalName: file.originalname,
+                originalName: file.originalname, // เก็บชื่อไฟล์เดิมที่เป็นภาษาไทย
                 mimeType: file.mimetype,
                 size: file.size,
                 path: file.path,
@@ -186,17 +250,28 @@ export class DocumentController {
                 status: body.status as DocumentStatus
             })
 
+            console.log('Document created successfully:', {
+                id: document.id,
+                title: document.title,
+                originalName: document.originalName,
+                filename: document.filename
+            })
+
             return res.json({
                 success: true,
                 message: 'อัพโหลดเอกสารสำเร็จ',
-                data: document
+                data: {
+                    ...document,
+                    displayName: file.originalname // ส่งชื่อไฟล์เดิมกลับไปแสดง
+                }
             })
 
         } catch (error) {
             console.error('Upload error:', error)
             return res.status(500).json({
                 success: false,
-                message: 'เกิดข้อผิดพลาดในการอัพโหลดเอกสาร'
+                message: 'เกิดข้อผิดพลาดในการอัพโหลดเอกสาร',
+                error: error.message
             })
         }
     }
